@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
+import db from './config/database.js'
 import tourRoute from './router/tour.js'
 import authRoute from './router/auth.js'
 import userRoute from './router/user.js'
@@ -15,6 +16,17 @@ const corsOptions = {
     origin:true,
     credential:true
 }
+
+db.authenticate()
+try {
+    console.log("database connected")
+} catch (error) {
+    console.log("failed connect")
+}
+
+(async () => {
+    await db.sync();
+})();
 
 app.use(express.json())
 app.use(cors(corsOptions))

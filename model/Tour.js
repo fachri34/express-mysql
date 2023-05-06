@@ -46,7 +46,7 @@ const Tour = db.define('tour', {
     freezeTableName: true
 });
 
-Tour.hasMany(Review, { foreignKey: 'productId' });
-Review.belongsTo(Tour, { foreignKey: 'productId' });
+Tour.hasMany(Review, { foreignKey: 'tourId' });
+Review.belongsTo(Tour, { foreignKey: 'tourId' });
 
 export default Tour;

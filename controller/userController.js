@@ -1,51 +1,62 @@
 import User from '../model/User.js'
 
 export const createUser = async (req, res) => {
-
-    const newUser = new User(req.body)
     try {
-        const savedUser = await newUser.save()
+        const savedUser = await User.create(req.body)
         res.status(200).json({
             success: true,
             message: "Successfully created",
             data: savedUser
         })
-    } catch (err) {
+    } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Failed to create, Try again"
+            message: "Failed to create, Try again!"
         })
     }
 }
 
 export const updateUser = async (req, res) => {
-    const id = req.params.id
+    const id = req.params.id;
+
+    const { username, email } = req.body;
 
     try {
-        const updatedUser = await User.findByIdAndUpdate(
-            id,
-            { $set: req.body },
-            { new: true }
-        );
-        res.status(200).json({
-            success: true,
-            message: "Successfully updated",
+        const user = await User.findOne({ where: { id } });
+
+        if (!user) {
+            return res.status(404).json({
+                status: false,
+                message: 'User not found'
+            });
+        }
+
+        await User.update({ username, email }, { where: { id } });
+
+        const updatedUser = await User.findByPk(id)
+
+        return res.status(200).json({
+            status: true,
+            message: 'User updated successfully',
             data: updatedUser
-        })
+        });
     } catch (err) {
-        res.status(500).json
-            ({
-                success: false,
-                message: "Failed to update, Try again"
-            })
+      
+        return res.status(500).json({
+            status: false,
+            message: 'Internal server error'
+        });
     }
+
 }
+
+
 
 export const deleteUser = async (req, res) => {
     const id = req.params.id
 
     try {
-        await User.findByIdAndDelete(id);
+        await User.destroy({ where: { id: id } });
         res.status(200).json({
             success: true,
             message: "Successfully deleted",
@@ -64,25 +75,25 @@ export const getSingleUser = async (req, res) => {
     const id = req.params.id
 
     try {
-        const User = await User.findById(id);
+        const getUser = await User.findByPk(id);
         res.status(200).json({
             success: true,
             message: "Successful",
-            data: User
+            data: getUser
         })
     } catch (err) {
-        res.status(404).json
-            ({
-                success: false,
-                message: "Not Found",
-            })
+        res.status(404).json({
+            success: false,
+            message: "Not Found",
+        })
     }
 }
+
 
 export const getAllUser = async (req, res) => {
 
     try {
-        const Users = await User.find({})
+        const Users = await User.findAll()
 
         res.status(200).json({
             success: true,

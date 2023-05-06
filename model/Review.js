@@ -20,11 +20,10 @@ const Review = db.define('review', {
             max: 5
         }
     },
-    productId: {
+    tourId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
-            tableName: 'tours',
+            tableName: 'tour',
             key: 'id'
         }
     }
@@ -35,6 +34,5 @@ const Review = db.define('review', {
 
 export default Review;
 
-import Tour from './Tour.js'
 
 

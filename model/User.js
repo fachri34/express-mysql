@@ -4,6 +4,11 @@ import db from "../config/database.js";
 const { DataTypes } = Sequelize;
 
 const User = db.define('user', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -30,8 +35,7 @@ const User = db.define('user', {
     freezeTableName: true
 });
 
+
 export default User;
 
-(async () => {
-    await db.sync();
-})();
+
